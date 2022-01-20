@@ -123,35 +123,19 @@ function App() {
                 doIt={doIt}
                 handleClose={() => setHarvesting(!harvesting)}
             />}
-      <div 
-        style={{ 
-          backgroundColor: 'grey',
-          width: '60%', 
-          height: '50%',
-          borderRadius: '25px'
-          }} 
-          className="App-header"
-      >
+      <div className='main'>
         <button
           style={{
-
+            position: 'relative',
+            left: '50%',
+            transform: 'translateX(-50%)',
           }}
           onClick={() => connectWallet()}
         >
           {account ? account : 'Connect Wallet'}
         </button>
-        <p>Your Claimable Boofi: {claimable === 0 ? claimable.toFixed(2) : ethers.utils.formatEther(claimable)}</p>
-        
+        <p className='claimable'>Your Claimable Boofi: {claimable === 0 ? claimable.toFixed(2) : ethers.utils.formatEther(claimable)}</p>
         <button
-          style={{
-            width: '300px',
-            height: '100px',
-            borderRadius: '25px',
-            color: 'white',
-            backgroundColor: 'lightGreen',
-            fontSize: '2em'
-
-          }}
           className='harvest-restake' onClick={() => harvestRestake()}>
           Harvest and Re-Stake!
         </button>

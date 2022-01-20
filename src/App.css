@@ -1,4 +1,29 @@
 
+.main{
+background-Color: grey;
+width: 60%;
+height: 50%;
+border-Radius: 25px;
+position: relative;
+left: 20%;
+}
+
+.harvest-restake{
+  width: 300px;
+  height: 100px;
+  border-Radius: 25px;
+  color: white;
+  background-Color: lightGreen;
+  font-Size:  2em;
+  position: relative;
+  left:50%;
+  transform: translateX(-50%);
+}
+
+.claimable{
+  text-align: center;
+}
+
 .popup-box {
   position: fixed;
   background: #0000008f;
@@ -7,6 +32,19 @@
   top: 0;
   left: 0;
   z-index: 100;
+}
+
+.small-popup-box {
+  position: fixed;
+  background: rgb(100, 100, 100);
+  width: 10%;
+  height: fit-content;
+  z-index: 101;
+  top: 10%;
+  left: 5%;
+  border: 5px solid #181717;
+  border-radius: 25px;
+  text-align: center;
 }
 
 .box {
@@ -54,14 +92,15 @@
 }
 
 .loader {
-  border: 5px solid #f3f3f3;
+  border: 10px solid #181717;
   border-radius: 50%;
-  border-top: 5px solid #00000000;
-  width: 5px;
-  height: 5px;
+  border-top: 10px solid #07070700;
+  width: 25px;
   -webkit-animation: spin 2s linear infinite; /* Safari */
+  height: 25px;
   animation: spin 2s linear infinite;
-  margin-right: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
 /* Safari */
@@ -74,3 +113,18 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.external-link{
+  height: 5rem;
+  width: 5rem;
+  position: relative;
+  top: .75rem;
+  transform: translateY(-.75rem);
+}
+
+.choice-link{
+  width: 50%;
+  height: 100%;
+  margin: 0px;
+}
+
