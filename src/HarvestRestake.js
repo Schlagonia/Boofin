@@ -3,9 +3,12 @@ import { ethers } from "ethers";
 
 function HarvestRestake(props) {
 
-    const [ content, setContent ] = useState(<p>Harvesting your Rewards!</p>);
+    const [ allApproved, setAllApproved ] = useState(false);
+    const [ harvested, setHarvested ] = useState(false);
+    const [ stakedBoofi, setStakedBoofi ] = useState(false);
+    const [ stakedZboofi, setStakedZBoofi ] = useState(false);
     const { doIt, zboofi, boofi, wos, account, claimable } = props;
-    const maxAllowance = ''
+    const maxAllowance = '115792089237316195423570985008687907853269984665640564039454.032474440953267345';
 
     useEffect(() => {
         if(doIt === 1){
@@ -13,33 +16,77 @@ function HarvestRestake(props) {
         }
     }, [doIt])
 
-    const harvest = () => {
-        // wos.harvest()
-        //event 1 harvest
-        //event 2 transfer
+    const harvest = async () => {
+        try {
+            // wos.harvest()
+            //event 1 harvest
+            //event 2 transfer
+            let vesting = await wos.harvest();
+            await vesting.wait();
+            console.log('Vestings ', vesting)
+
+            return true;
+        } catch (error) {
+            console.log(error)
+        }
     }
   
     const approveBoofi = async () => {
-        //approve boofi token to zboofi contract
-        await boofi.appove(zboofi.address, maxAllowance);
-        console.log('Boofi approved');
-        return true;
+        try {
+            //approve boofi token to zboofi contract
+            let proving = await boofi.appove(zboofi.address, maxAllowance);
+            await proving.wait()
+            console.log('Boofi approved');
+            
+            return true;
+        } catch (error) {
+            console.log(error);
+        }
     }
   
-    const stakeBoofi = () => {
-        // zboofi.enter(amount)
-        // event transfer from 0xx00 to account
+    const stakeBoofi = async () => {
+        try{
+            // zboofi.enter(amount)
+            // event transfer from 0xx00 to account
+            let bal = await boofi.balanceOf(account);
+
+            let staken = await zboofi.enter(bal);
+            await staken.wait();
+            console.log('Staked the boofi')
+
+            return true;
+
+        } catch (error) {
+            console.log(error);
+        }
     }
   
     const approveZboofi = async () => {
-        //approve zboofi token to wos contract
-        await zboofi.appove(wos.address, maxAllowance);
-        console.log('Zboofi Approved')
-        return true;
+        try {
+            //approve zboofi token to wos contract
+            let proving = await zboofi.appove(wos.address, maxAllowance);
+            await proving.wait() 
+            console.log('Zboofi Approved')
+            
+            return true;
+        } catch (error) {
+            console.log(error);
+        }
     }
   
-    const stakeZboofi = () => {
-        // wos.deposit(amount)
+    const stakeZboofi = async () => {
+        try{
+            // wos.deposit(amount)
+            let bal = await zboofi.balanceOf(account);
+
+            let stakez = await wos.deposit(bal);
+            await stakez.wait();
+            console.log('Staked Zboofi')
+
+            return true;
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const checkApprovals = async () => {
@@ -75,8 +122,28 @@ function HarvestRestake(props) {
                 alert('Approvals Failed, please try again');
             }
             console.log('All approved');
-            
+            setAllApproved(true);
 
+            let farmlife = await harvest();
+            if(!farmlife) {
+                alert('Harvest Failed, please try again')
+            }
+            
+            setHarvested(true);
+
+            let stakeLife = await stakeBoofi();
+            if(!stakeLife) {
+                alert('Staking failed, please try again')
+            }
+            setStakedBoofi(true);
+
+            let stakedlifez = await stakeZboofi();
+            if(!stakedlifez) {
+                alert('StakingZ failed, please try again')
+            }
+            setStakedZBoofi(true);
+
+            console.log('Staked all those muthafuckas')
 
         } catch (error) {
             console.log(error); 
@@ -88,8 +155,44 @@ function HarvestRestake(props) {
             <div className="box">
                 <span className="close-icon" onClick={props.handleClose}>x</span>
                 <p className="popup-title">Harvesting and Restaking your Boofi Rewards!</p>
-                <p>This may take a few minutes and require multiple transactions and approvals</p> 
-                {content}
+                <p>This may take a few minutes and require multiple approvals and transactions</p> 
+                {allApproved ? 
+                    <div style={{ color : 'white' }}>
+                        {String.fromCharCode(10004)} Approved
+                    </div> 
+                    : 
+                    <div style={{ color : 'grey' }}>
+                        X Approved
+                    </div>
+                }
+                {harvested ? 
+                    <div style={{ color : 'white' }}>
+                        {String.fromCharCode(10004)} Harvested
+                    </div> 
+                    : 
+                    <div style={{ color : 'grey' }}>
+                        X Harvested
+                    </div>
+                }
+                {stakedBoofi ? 
+                    <div style={{ color : 'white' }}>
+                        {String.fromCharCode(10004)} Staked Boofi
+                    </div> 
+                    : 
+                    <div style={{ color : 'grey' }}>
+                        X Staked Boofi
+                    </div>
+                }
+                {stakedZboofi ? 
+                    <div style={{ color : 'white' }}>
+                        {String.fromCharCode(10004)} Deposit ZBoofi
+                    </div> 
+                    : 
+                    <div style={{ color : 'grey' }}>
+                        X Deposit ZBoofi
+                    </div>
+                }
+                <p>Harvesting your Rewards!</p>
             </div>
         </div>
     );
